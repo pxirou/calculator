@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/colorWhite"
     tools:context=".MainActivity">
 
     <!--    todo add style for the buttons -->
+    <!--    todo add scrollbar to the screen -->
+    <!--    todo add horizontal scrollbar to the screen -->
     <TextView
         android:id="@+id/calculator_screen"
         android:layout_width="0dp"
@@ -15,48 +17,67 @@
         android:layout_margin="5dp"
         android:background="@color/colorScreen"
         android:gravity="end"
-        android:paddingLeft="30sp"
-        android:paddingRight="5sp"
-        android:hint="@string/button_0"
+        android:paddingRight="30sp"
+        android:paddingLeft="5sp"
         android:singleLine="true"
+        android:text="@string/calculator_screen_initial"
+        android:textColor="@color/textColor"
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal1"
         app:layout_constraintLeft_toLeftOf="@id/button_clear_entry"
-        app:layout_constraintRight_toRightOf="@id/button_memory_addition"
-        app:layout_constraintTop_toTopOf="@id/guideline_horizontal1"/>
+        app:layout_constraintRight_toRightOf="@id/button_memory_recall"
+        app:layout_constraintTop_toTopOf="@id/guideline_horizontal1"
+        tools:ignore="RtlHardcoded" />
 
     <TextView
         android:id="@+id/memory_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
+        android:layout_marginRight="5dp"
         android:background="@color/colorScreen"
         android:gravity="end"
         android:text="@string/memory_indicator"
-        android:textSize="20sp"
+        android:textColor="@color/textColor"
+        android:textSize="18sp"
         android:visibility="invisible"
-        app:layout_constraintLeft_toLeftOf="@id/calculator_screen"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal1"
+        app:layout_constraintRight_toRightOf="@id/calculator_screen"
         app:layout_constraintTop_toTopOf="@id/calculator_screen"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        tools:ignore="RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/operator_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorScreen"
+        android:gravity="end"
+        android:textColor="@color/textColor"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/calculator_screen"
+        app:layout_constraintLeft_toLeftOf="@id/memory_indicator"
+        app:layout_constraintRight_toRightOf="@id/memory_indicator"
+        app:layout_constraintTop_toTopOf="@id/guideline_horizontal1"
+        tools:text="="/>
 
     <Button
         android:id="@+id/button_memory_recall"
-        android:onClick="buttonMemoryRecallClicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="buttonMemoryRecallClicked"
         android:text="@string/button_memory_recall"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal3"
-        app:layout_constraintLeft_toLeftOf="@id/guideline_vertical2"
-        app:layout_constraintRight_toLeftOf="@id/guideline_vertical3"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_vertical4"
+        app:layout_constraintRight_toLeftOf="@id/guideline_vertical5"
         app:layout_constraintTop_toTopOf="@id/guideline_horizontal2" />
 
     <Button
         android:id="@+id/button_memory_subtraction"
-        android:onClick="buttonMemorySubtractionClicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="buttonMemorySubtractionClicked"
         android:text="@string/button_memory_subtraction"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal3"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical3"
@@ -65,22 +86,22 @@
 
     <Button
         android:id="@+id/button_memory_addition"
-        android:onClick="buttonMemoryAdditionClicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="buttonMemoryAdditionClicked"
         android:text="@string/button_memory_addition"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal3"
-        app:layout_constraintLeft_toLeftOf="@id/guideline_vertical4"
-        app:layout_constraintRight_toLeftOf="@id/guideline_vertical5"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_vertical2"
+        app:layout_constraintRight_toLeftOf="@id/guideline_vertical3"
         app:layout_constraintTop_toTopOf="@id/guideline_horizontal2" />
 
     <Button
         android:id="@+id/button_clear_entry"
-        android:onClick="buttonClearEntryClicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="buttonClearEntryClicked"
         android:text="@string/button_clear_entry"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal4"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical1"
@@ -89,10 +110,10 @@
 
     <Button
         android:id="@+id/button_square_root"
-        android:onClick="buttonSquareRootClicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="buttonSquareRootClicked"
         android:text="@string/button_square_root"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal4"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical2"
@@ -101,10 +122,10 @@
 
     <Button
         android:id="@+id/button_percent"
-        android:onClick="buttonPercentClicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="buttonPercentClicked"
         android:text="@string/button_percent"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal4"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical3"
@@ -113,10 +134,10 @@
 
     <Button
         android:id="@+id/button_division"
-        android:onClick="buttonDivisionClicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="buttonDivisionClicked"
         android:text="@string/button_divide"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal4"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical4"
@@ -125,10 +146,10 @@
 
     <Button
         android:id="@+id/button_7"
-        android:onClick="button7Clicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="button7Clicked"
         android:text="@string/button_7"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal5"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical1"
@@ -137,10 +158,10 @@
 
     <Button
         android:id="@+id/button_8"
-        android:onClick="button8Clicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="button8Clicked"
         android:text="@string/button_8"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal5"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical2"
@@ -149,10 +170,10 @@
 
     <Button
         android:id="@+id/button_9"
-        android:onClick="button9Clicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="button9Clicked"
         android:text="@string/button_9"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal5"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical3"
@@ -161,10 +182,10 @@
 
     <Button
         android:id="@+id/button_multiplication"
-        android:onClick="buttonMultiplicationClicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="buttonMultiplicationClicked"
         android:text="@string/button_multiply"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal5"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical4"
@@ -173,10 +194,10 @@
 
     <Button
         android:id="@+id/button_4"
-        android:onClick="button4Clicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="button4Clicked"
         android:text="@string/button_4"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal6"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical1"
@@ -185,10 +206,10 @@
 
     <Button
         android:id="@+id/button_5"
-        android:onClick="button5Clicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="button5Clicked"
         android:text="@string/button_5"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal6"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical2"
@@ -197,10 +218,10 @@
 
     <Button
         android:id="@+id/button_6"
-        android:onClick="button6Clicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="button6Clicked"
         android:text="@string/button_6"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal6"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical3"
@@ -209,10 +230,10 @@
 
     <Button
         android:id="@+id/button_subtraction"
-        android:onClick="buttonSubtractionClicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="buttonSubtractionClicked"
         android:text="@string/button_subtraction"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal6"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical4"
@@ -221,10 +242,10 @@
 
     <Button
         android:id="@+id/button_1"
-        android:onClick="button1Clicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="button1Clicked"
         android:text="@string/button_1"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal7"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical1"
@@ -233,10 +254,10 @@
 
     <Button
         android:id="@+id/button_2"
-        android:onClick="button2Clicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="button2Clicked"
         android:text="@string/button_2"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal7"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical2"
@@ -245,10 +266,10 @@
 
     <Button
         android:id="@+id/button_3"
-        android:onClick="button3Clicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="button3Clicked"
         android:text="@string/button_3"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal7"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical3"
@@ -257,10 +278,10 @@
 
     <Button
         android:id="@+id/button_0"
-        android:onClick="button0Clicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="button0Clicked"
         android:text="@string/button_0"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal8"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical1"
@@ -269,10 +290,10 @@
 
     <Button
         android:id="@+id/button_dot"
-        android:onClick="buttonDotClicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="buttonDotClicked"
         android:text="@string/button_dot"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal8"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical2"
@@ -281,10 +302,10 @@
 
     <Button
         android:id="@+id/button_equal"
-        android:onClick="buttonEqualClicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="buttonEqualClicked"
         android:text="@string/button_equal"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal8"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical3"
@@ -293,10 +314,10 @@
 
     <Button
         android:id="@+id/button_addition"
-        android:onClick="buttonAdditionClicked"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="5dp"
+        android:onClick="buttonAdditionClicked"
         android:text="@string/button_add"
         app:layout_constraintBottom_toBottomOf="@id/guideline_horizontal8"
         app:layout_constraintLeft_toLeftOf="@id/guideline_vertical4"
@@ -394,12 +415,20 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.64" />
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/colorScreen"
+        app:layout_constraintLeft_toLeftOf="@id/guideline_vertical1"
+        app:layout_constraintRight_toRightOf="@id/guideline_vertical5"
+        app:layout_constraintTop_toBottomOf="@id/guideline_horizontal8" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/currency_converter"
-        android:textColor="@color/colorScreen"
+        android:textColor="@color/textColor"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="@id/guideline_vertical5"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical1"
@@ -409,8 +438,8 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="From:"
-        android:textColor="@color/colorScreen"
+        android:text="@string/from"
+        android:textColor="@color/textColor"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@id/textView" />
@@ -420,7 +449,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@id/textView2"
-        app:layout_constraintEnd_toEndOf="@id/guideline_vertical4"
+        app:layout_constraintEnd_toEndOf="@id/guideline_vertical5"
         app:layout_constraintStart_toEndOf="@id/textView2"
         app:layout_constraintTop_toTopOf="@id/textView2" />
 
@@ -429,7 +458,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="@id/textView3"
-        app:layout_constraintEnd_toEndOf="@id/guideline_vertical4"
+        app:layout_constraintEnd_toEndOf="@id/guideline_vertical5"
         app:layout_constraintStart_toEndOf="@id/textView2"
         app:layout_constraintTop_toTopOf="@id/textView3" />
 
@@ -437,34 +466,34 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="To:"
-        android:textColor="@color/colorScreen"
+        android:text="@string/to"
+        android:textColor="@color/textColor"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@id/textView2" />
 
     <Button
         android:id="@+id/button_convert"
-        android:onClick="buttonConvertClicked"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:onClick="buttonConvertClicked"
         android:text="@string/button_go"
-        app:layout_constraintBottom_toBottomOf="@id/textView3"
-        app:layout_constraintLeft_toLeftOf="@id/guideline_vertical4"
-        app:layout_constraintRight_toLeftOf="@id/guideline_vertical5"
-        app:layout_constraintTop_toTopOf="@id/textView2" />
+        app:layout_constraintLeft_toLeftOf="@+id/guideline_vertical1"
+        app:layout_constraintRight_toRightOf="@+id/guideline_vertical5"
+        app:layout_constraintTop_toBottomOf="@id/spinner2" />
 
     <TextView
         android:id="@+id/exchange_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="xxx.xx are equal to yyy.yy"
-        android:textColor="@color/colorScreen"
+        android:text="@string/exchange_result"
+        android:textColor="@color/textColor"
         android:textSize="20sp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/guideline_vertical5"
         app:layout_constraintStart_toStartOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@id/textView3" />
+        app:layout_constraintTop_toBottomOf="@id/button_convert" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
