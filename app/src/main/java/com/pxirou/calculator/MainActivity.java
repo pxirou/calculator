@@ -19,6 +19,7 @@ import com.pxirou.calculator.networking.GetDataService;
 import com.pxirou.calculator.networking.RetrofitClientInstance;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,11 +30,11 @@ public class MainActivity extends AppCompatActivity {
     TextView calculatorScreen, memoryIndicator, exchangeResult, operatorIndicator;
     Spinner spinner1, spinner2;
     StateIndex stateIndex;
-    boolean additionClicked, subtractionClicked, multiplicationClicked, divisionClicked, memoryValueHadJustCalledOnce;
+    boolean additionClicked, subtractionClicked, multiplicationClicked, divisionClicked, memoryValueHadJustClickedOnce, operationHadJustClicked, equalHadJustClicked;
     byte dotIndex, tempValueShownCharacters;
-    double permanentValue, tempValue, memoryValue;
+    double permanentValue, tempValue, memoryValue, lastValue;
     String[] currencies;
-    String procrustes;
+    String procrustes; // You can easily understand why i named this variable like this :-)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +94,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonDotClicked(View view) {
-        if (memoryValueHadJustCalledOnce) {
+        equalHadJustClicked = false;
+        if (memoryValueHadJustClickedOnce) {
             tempValueInitializer();
-            memoryValueHadJustCalledOnce = false;
-        }    if (tempValueShownCharacters < 10) {
+            memoryValueHadJustClickedOnce = false;
+        }
+        if (tempValueShownCharacters < 10) {
             if (stateIndex == StateIndex.EQUAL_CLICKED) {
                 stateIndex = StateIndex.STANDBY;
             }
@@ -115,9 +118,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void numberClicked(int i) {
-        if (memoryValueHadJustCalledOnce) {
+        equalHadJustClicked = false;
+        operationHadJustClicked = false;
+        if (memoryValueHadJustClickedOnce) {
             tempValueInitializer();
-            memoryValueHadJustCalledOnce = false;
+            memoryValueHadJustClickedOnce = false;
         }
         if (tempValueShownCharacters < 10) {
             if (stateIndex == StateIndex.EQUAL_CLICKED) {
@@ -168,11 +173,15 @@ public class MainActivity extends AppCompatActivity {
         } else {
             calculatorScreen.setText(getString(R.string.calculator_screen_general, "" + permanentValue, ""));
         }
-        checkOverflow();
+        if (Math.abs(permanentValue) > Long.parseLong("9999999999")) {
+            checkOverflow();
+        } else if (Math.abs(permanentValue) < Double.parseDouble("0.00000001")) {
+            checkUnderflow();
+        }
         shownDigitsLimiter();
     }
 
-    public void checkObsoleteZeros() {
+    private void checkObsoleteZeros() {
         procrustes = "" + tempValue;
         int i = procrustes.indexOf('.') + dotIndex;
         if (i > procrustes.length()) {
@@ -180,17 +189,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void checkOverflow() {
-        if (Math.abs(permanentValue) > Long.parseLong("9999999999")) {
-            Toast.makeText(getApplicationContext(), "Number overflow!", Toast.LENGTH_LONG).show();
-            permanentValue = 0.0;
-            stateIndex = StateIndex.EQUAL_CLICKED;
-            operatorInitializer();
-            vibrate();
-        }
+    //based on the 10 digits screen capacity limit
+    private void checkOverflow() {
+        Toast.makeText(getApplicationContext(), "Number overflow!", Toast.LENGTH_LONG).show();
+        permanentValue = 0.0;
+        stateIndex = StateIndex.EQUAL_CLICKED;
+        operatorInitializer();
+        vibrate();
     }
 
-    public void shownDigitsLimiter() {
+    //based on the 10 digits screen capacity limit
+    private void checkUnderflow() {
+        Toast.makeText(getApplicationContext(), "Number underflow!", Toast.LENGTH_LONG).show();
+        permanentValue = 0.0;
+        stateIndex = StateIndex.EQUAL_CLICKED;
+        operatorInitializer();
+        vibrate();
+    }
+
+    private void shownDigitsLimiter() {
         //limits digits to maximum of 10
         procrustes = calculatorScreen.getText().toString();
         if (procrustes.length() > 10) {
@@ -215,7 +232,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonAdditionClicked(View view) {
-        memoryValueHadJustCalledOnce = false;
+        memoryValueHadJustClickedOnce = false;
+        equalHadJustClicked = false;
         operatorIndicator.setText("+");
         if (stateIndex == StateIndex.EQUAL_CLICKED) {
             tempValueInitializer();
@@ -238,7 +256,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonSubtractionClicked(View view) {
-        memoryValueHadJustCalledOnce = false;
+        memoryValueHadJustClickedOnce = false;
+        equalHadJustClicked = false;
         operatorIndicator.setText("-");
         if (stateIndex == StateIndex.EQUAL_CLICKED) {
             tempValueInitializer();
@@ -261,8 +280,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonMultiplicationClicked(View view) {
-        memoryValueHadJustCalledOnce = false;
-        operatorIndicator.setText("x");
+        memoryValueHadJustClickedOnce = false;
+        equalHadJustClicked = false;
         if (stateIndex == StateIndex.EQUAL_CLICKED) {
             tempValueInitializer();
             operatorInitializer();
@@ -280,13 +299,14 @@ public class MainActivity extends AppCompatActivity {
             permanentValue = tempValue;
             tempValueInitializer();
             multiplicationClicked = true;
-            //todo check if tap consecutively multiply-equals
         }
+        operationHadJustClicked = true;
+        operatorIndicator.setText("x");
     }
 
     public void buttonDivisionClicked(View view) {
-        memoryValueHadJustCalledOnce = false;
-        operatorIndicator.setText(":");
+        memoryValueHadJustClickedOnce = false;
+        equalHadJustClicked = false;
         if (stateIndex == StateIndex.EQUAL_CLICKED) {
             tempValueInitializer();
             operatorInitializer();
@@ -305,28 +325,45 @@ public class MainActivity extends AppCompatActivity {
             tempValueInitializer();
             divisionClicked = true;
         }
+        operationHadJustClicked = true;
+        operatorIndicator.setText(":");
     }
 
     private void doOperation() {
-        if (additionClicked)
-            permanentValue += tempValue;
-        else if (subtractionClicked)
-            permanentValue -= tempValue;
-        else if (multiplicationClicked)
-            permanentValue *= tempValue;
-        else if (divisionClicked) {
-            if (tempValue != 0.0) {
-                permanentValue /= tempValue;
-            } else {
-                divisionBy0();
-                return;
+        if (!operationHadJustClicked) {
+            if (additionClicked) {
+                permanentValue += tempValue;
+            } else if (subtractionClicked) {
+                permanentValue -= tempValue;
+            } else if (multiplicationClicked) {
+                if (operatorIndicator.getText().toString().equals("x") && tempValue == 0.0) {
+                    tempValue = 1;
+                }
+                permanentValue *= tempValue;
+            } else if (divisionClicked) {
+                if (operatorIndicator.getText().toString().equals(":") && tempValue == 0.0) {
+                    tempValue = 1;
+                }
+                if (tempValue != 0.0) {
+                    permanentValue /= tempValue;
+                } else {
+                    divisionBy0();
+                    return;
+                }
             }
+            showOperatorResult();
         }
-        showOperatorResult();
     }
 
     public void buttonEqualClicked(View view) {
+        //keeps lastValue and use it in case of consecutive equals
+        if (equalHadJustClicked) {
+            tempValue = lastValue;
+            stateIndex = StateIndex.OPERATOR_CLICKED;
+        }
+        lastValue = tempValue;
         operatorIndicator.setText("=");
+        equalHadJustClicked = true;
         if (stateIndex == StateIndex.OPERATOR_CLICKED) {
             if (additionClicked)
                 permanentValue += tempValue;
@@ -359,23 +396,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonSquareRootClicked(View view) {
-        memoryValueHadJustCalledOnce = true;
-        tempValue = Math.sqrt(tempValue);
-        updateView();
-        dotInitializer();
-        if (stateIndex != StateIndex.OPERATOR_CLICKED) {
-            tempValue = 0.0;
-            stateIndex = StateIndex.STANDBY;
+        equalHadJustClicked = false;
+        memoryValueHadJustClickedOnce = false;
+        if (stateIndex == StateIndex.EQUAL_CLICKED) {
+            permanentValue = Math.sqrt(permanentValue);
+            showOperatorResult();
+        } else if (stateIndex == StateIndex.OPERATOR_CLICKED) {
+            tempValue = Math.sqrt(tempValue);
+            updateView();
+            dotInitializer();
+        } else {
+            tempValue = Math.sqrt(tempValue);
+            updateView();
+            dotInitializer();
         }
     }
 
     public void buttonPercentClicked(View view) {
+        equalHadJustClicked = false;
+        memoryValueHadJustClickedOnce = false;
         tempValue = permanentValue * tempValue / 100;
         dotInitializer();
         updateView();
     }
 
     public void buttonClearAllClicked(View view) {
+        equalHadJustClicked = false;
         permanentValue = 0.0;
         operatorIndicator.setText("");
         tempValueInitializer();
@@ -386,12 +432,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonClearEntryClicked(View view) {
+        equalHadJustClicked = false;
         tempValueInitializer();
         dotInitializer();
         updateView();
     }
 
     public void buttonMemoryAdditionClicked(View view) {
+        equalHadJustClicked = false;
         memoryValue += Double.parseDouble(calculatorScreen.getText().toString());
         stateIndex = StateIndex.EQUAL_CLICKED;
         permanentValue = tempValue;
@@ -401,6 +449,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonMemorySubtractionClicked(View view) {
+        equalHadJustClicked = false;
         memoryValue -= Double.parseDouble(calculatorScreen.getText().toString());
         stateIndex = StateIndex.EQUAL_CLICKED;
         permanentValue = tempValue;
@@ -410,11 +459,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void buttonMemoryRecallClicked(View view) {
-        if (memoryValueHadJustCalledOnce) {
+        equalHadJustClicked = false;
+        if (memoryValueHadJustClickedOnce) {
             memoryValue = 0.0;
             memoryIndicator.setVisibility(View.INVISIBLE);
         } else {
-            memoryValueHadJustCalledOnce = true;
+            memoryValueHadJustClickedOnce = true;
             tempValue = memoryValue;
             updateView();
             if (stateIndex != StateIndex.OPERATOR_CLICKED) {

@@ -18,7 +18,7 @@
     <string name="button_multiply">x</string>
     <string name="button_divide">:</string>
     <string name="button_percent">%</string>
-    <string name="button_square_root">SQR</string>
+    <string name="button_square_root">SQRT</string>
     <string name="button_subtraction">-</string>
     <string name="button_memory_recall">MRC</string>
     <string name="button_memory_addition">M+</string>
